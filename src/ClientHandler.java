@@ -65,7 +65,20 @@ public class ClientHandler {
             if (strFromClient.equals("/end")) {
                 return;
             }
-            myServer.broadcastMsg(name + ": " + strFromClient);
+
+            if (strFromClient.startsWith("/w")) {
+                String[] parts = strFromClient.split("\\s");
+
+                if (myServer.isNickBusy(parts[1])) {
+                    myServer.broadcastMsgToNick(name, parts[1], parts[2] );
+                }
+
+                else {
+                    myServer.broadcastMsg(name + ": " + strFromClient);
+                }
+            } else {
+                myServer.broadcastMsg(name + ": " + strFromClient);
+            }
         }
     }
 

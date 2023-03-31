@@ -56,4 +56,15 @@ public class MyServer {
     public synchronized void subscribe(ClientHandler o) {
         clients.add(o);
     }
+
+    public synchronized void broadcastMsgToNick(String nameFrom, String nameTo, String msg) {
+        for (ClientHandler o : clients){
+            if (o.getName().equals(nameTo)){
+                o.sendMsg("ЛС от: " + nameFrom + ": " + msg);
+            }
+            if (o.getName().equals(nameFrom)){
+                o.sendMsg("ЛС от: " + nameFrom + ": " + msg);
+            }
+        }
+    }
 }

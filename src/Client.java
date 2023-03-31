@@ -13,11 +13,12 @@ import java.net.Socket;
 public class Client extends JFrame {
     private final String SERVER_ADDR = "localhost";
     private final int SERVER_PORT = 1234;
-    private JTextField msgInputField;
+    private JTextField msgInputField, loginField, passField;
     private JTextArea chatArea;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
+    
 
     public Client() {
         try {
@@ -79,6 +80,7 @@ public class Client extends JFrame {
         }
     }
 
+
     public void sendMessage() {
         if (!msgInputField.getText().trim().isEmpty()) {
             try {
@@ -97,6 +99,9 @@ public class Client extends JFrame {
         setBounds(600, 300, 500, 500);
         setTitle("Клиент");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        
+        loginField = new JTextField();
+        passField = new JTextField();
         // Текстовое поле для вывода сообщений
         chatArea = new JTextArea();
         chatArea.setEditable(false);
