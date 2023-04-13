@@ -2,6 +2,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
 
 public class ClientHandler {
     private MyServer myServer;
@@ -27,6 +28,10 @@ public class ClientHandler {
                     readMessages();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
                 } finally {
                     closeConnection();
                 }
@@ -36,17 +41,19 @@ public class ClientHandler {
         }
     }
 
-    public void authentication() throws IOException {
+    public void authentication() throws IOException, SQLException, ClassNotFoundException {
         while (true) {
             String str = in.readUTF();
             if (str.startsWith("/auth")) {
+
                 String[] parts = str.split("\\s");
-                String nick = myServer.getAuthService().getNickByLoginPass(parts[1], parts[2]);
+                String nick = myServer.getAuthService().getNickByLoginPassDB(parts[1], parts[2]);
                 if (nick != null) {
                     if (!myServer.isNickBusy(nick)) {
                         sendMsg("/authok " + nick);
                         name = nick;
                         myServer.broadcastMsg(nick + " зашел в чат");
+                        sendMsg("Авторизация пройдена " + "Hello " + nick + " !");
                         myServer.subscribe(this);
                         return;
                     } else {
